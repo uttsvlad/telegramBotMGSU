@@ -1,4 +1,4 @@
-# telegramBotMGSUSchedule
+<h1 align = "center"> #telegramBotMGSUSchedule </h1>
  <p align="center">
  🤖 <b> University python course project. </b>  
  </p>
