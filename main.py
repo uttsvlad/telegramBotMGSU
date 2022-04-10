@@ -1,11 +1,12 @@
 from cgitb import text
 import telebot
 from telebot import types
-import urlworker
-from architecture_articles_parser import get_random_article_from_architect4u
+import url_worker
+
 token = "5118191064:AAGkLtD7YJkPMXV2uZaCp4M0txgEOO5KFQ8"
 bot = telebot.TeleBot(token)
-p = urlworker.Parser("https://mgsu.ru/student/Raspisanie_zanyatii_i_ekzamenov/fayly-raspisaniya-dlya-skachivaniya/")
+mgsu_parser = url_worker.ParserFactory.create_parser_instance(0)
+articles_parser = url_worker.ParserFactory.create_parser_instance(1)
 
 BOT_COMMANDS = ["Расписание на сегодня", "Расписание на завтра", "Какая сейчас неделя?", "Какая сейчас пара по счету?",
                 "Статья об архитектуре"]
@@ -30,13 +31,13 @@ def message_reply(message):
         bot.send_message(message.chat.id, "2")
 
     elif (message.text == BOT_COMMANDS[2]):
-        bot.send_message(message.chat.id, p.set_week())
+        bot.send_message(message.chat.id, mgsu_parser.set_week())
 
     elif (message.text == BOT_COMMANDS[3]):
         bot.send_message(message.chat.id, "4")
 
     elif (message.text == BOT_COMMANDS[4]):
-        bot.send_message(message.chat.id, get_random_article_from_architect4u())
+        bot.send_message(message.chat.id, articles_parser.get_random_article())
 
 
 bot.infinity_polling()
