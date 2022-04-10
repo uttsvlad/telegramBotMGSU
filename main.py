@@ -1,8 +1,11 @@
+from cgitb import text
 import telebot
 from telebot import types
+import urlworker
 
 token = '5118191064:AAGkLtD7YJkPMXV2uZaCp4M0txgEOO5KFQ8'
 bot = telebot.TeleBot(token)
+p = urlworker.Parser("https://mgsu.ru/student/Raspisanie_zanyatii_i_ekzamenov/fayly-raspisaniya-dlya-skachivaniya/")
 
 BOT_COMMANDS = ['Расписание на сегодня', 'Расписание на завтра', 'Какая сейчас неделя?', 'Какая сейчас пара по счету?',
                 'Архитектурная статья дня']
@@ -27,7 +30,7 @@ def message_reply(message):
         bot.send_message(message.chat.id, "2")
 
     elif (message.text == BOT_COMMANDS[2]):
-        bot.send_message(message.chat.id, "3")
+        bot.send_message(message.chat.id, p.set_week())
 
     elif (message.text == BOT_COMMANDS[3]):
         bot.send_message(message.chat.id, "4")
