@@ -14,7 +14,7 @@ def check_status(self):
     elif str(self.__r.status_code) == '404':
         return "Страница не найдена!"
 
-    return "Нет информации, возможно на сайте технические работы"
+    return "Нет информации, возможно, на сайте ведутся технические работы"
 
 
 class MGSUParser:
