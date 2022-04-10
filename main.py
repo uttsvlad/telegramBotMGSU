@@ -1,3 +1,4 @@
+
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -35,6 +36,7 @@ async def message_reply(message):
         await bot.send_message(message.chat.id, "2")
 
     elif (message.text == BOT_COMMANDS[2]):
+
         text =  await mgsu_parser.set_week()
         await bot.send_message(message.chat.id, text)
 
@@ -42,6 +44,7 @@ async def message_reply(message):
         await bot.send_message(message.chat.id, "4")
 
     elif (message.text == BOT_COMMANDS[4]):
+
         text = await articles_parser.get_random_article()
         await bot.send_message(message.chat.id, text)
 
