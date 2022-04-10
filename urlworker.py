@@ -1,12 +1,11 @@
-from msilib.schema import Error
 import requests
 from bs4 import BeautifulSoup as bs
 from random import randint
-from enum import Enum
 
 URLS = ["https://mgsu.ru/student/Raspisanie_zanyatii_i_ekzamenov/fayly-raspisaniya-dlya-skachivaniya/",
         "https://www.architect4u.ru/articles.html", "https://www.architect4u.ru/articles-2.html",
         "https://www.architect4u.ru/articles-3.html"]
+
 
 def check_status(self):
     if str(self.__r.status_code)[0] == '5':
@@ -26,9 +25,9 @@ class MGSUParser:
 
     async def set_week(self):
         if self.__r.status_code == 200:
-            for self.data in self.__week:
-                if (self.data.find('b') is not None) and ("неделя" in str(self.data.text)):
-                    return self.data.text
+            for data in self.__week:
+                if (data.find('b') is not None) and ("неделя" in str(data.text)):
+                    return data.text
 
         else:
             check_status(self)
@@ -52,8 +51,10 @@ class ArticlesParser:
 
 
 class ParserFactory:
-    def create_parser_instance(parser_type):
-        if (parser_type == "MGSU"):
-            return MGSUParser()
-        elif (parser_type == "ARTICLE"):
-            return ArticlesParser()
+    @staticmethod
+    def create_mgsu_parser():
+        return MGSUParser()
+
+    @staticmethod
+    def create_articles_parser():
+        return ArticlesParser()

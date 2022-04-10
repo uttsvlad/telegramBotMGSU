@@ -1,4 +1,3 @@
-
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -15,8 +14,9 @@ BOT_BUTTONS = []
 for command in BOT_COMMANDS:
     BOT_BUTTONS.append(types.KeyboardButton(command))
 
-mgsu_parser = urlworker.ParserFactory.create_parser_instance("MGSU")
-articles_parser = urlworker.ParserFactory.create_parser_instance("ARTICLE")
+mgsu_parser = urlworker.ParserFactory.create_mgsu_parser()
+articles_parser = urlworker.ParserFactory.create_articles_parser()
+
 
 @dp.message_handler(commands=['start', 'help'])
 async def process_start_command(msg: types.Message):
@@ -26,29 +26,26 @@ async def process_start_command(msg: types.Message):
     await bot.send_message(msg.from_user.id, "Выберите нужную кнопку:", reply_markup=markup)
 
 
-
 @dp.message_handler(content_types=["text"])
 async def message_reply(message):
-    if (message.text == BOT_COMMANDS[0]):
+    if message.text == BOT_COMMANDS[0]:
         await bot.send_message(message.chat.id, "1")
 
-    elif (message.text == BOT_COMMANDS[1]):
+    elif message.text == BOT_COMMANDS[1]:
         await bot.send_message(message.chat.id, "2")
 
-    elif (message.text == BOT_COMMANDS[2]):
+    elif message.text == BOT_COMMANDS[2]:
 
-        text =  await mgsu_parser.set_week()
+        text = await mgsu_parser.set_week()
         await bot.send_message(message.chat.id, text)
 
-    elif (message.text == BOT_COMMANDS[3]):
+    elif message.text == BOT_COMMANDS[3]:
         await bot.send_message(message.chat.id, "4")
 
-    elif (message.text == BOT_COMMANDS[4]):
+    elif message.text == BOT_COMMANDS[4]:
 
         text = await articles_parser.get_random_article()
         await bot.send_message(message.chat.id, text)
-
-
 
 
 if __name__ == '__main__':
