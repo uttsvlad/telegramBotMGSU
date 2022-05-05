@@ -2,16 +2,17 @@ import requests
 from bs4 import BeautifulSoup as bs
 from random import randint
 
-URLS = ["https://mgsu.ru/student/Raspisanie_zanyatii_i_ekzamenov/fayly-raspisaniya-dlya-skachivaniya/",
-        "https://www.architect4u.ru/articles.html", "https://www.architect4u.ru/articles-2.html",
-        "https://www.architect4u.ru/articles-3.html"]
+MGSU_URLS = ["https://mgsu.ru/student/Raspisanie_zanyatii_i_ekzamenov/fayly-raspisaniya-dlya-skachivaniya/",
+             "https://mgsu.ru/postupay/dod.php"]
+
+ARTICLE_URLS = ["https://www.architect4u.ru/articles.html", "https://www.architect4u.ru/articles-2.html",
+                "https://www.architect4u.ru/articles-3.html"]
 
 
 class MGSUParser:
-    def __init__(self, url = URLS[0]):
+    def __init__(self, url=MGSU_URLS[0]):
         self.r = requests.get(url, verify=False)
         self.soup = bs(self.r.text, "html.parser")
-        self.week = self.soup.find_all('h4')
 
     def check_status(self):
         if str(self.r.status_code)[0] == '5':
@@ -23,10 +24,29 @@ class MGSUParser:
         return "Нет информации, возможно, на сайте ведутся технические работы"
 
     def set_week(self):
+        if self.r.url != MGSU_URLS[0]:
+            self.r = requests.get(MGSU_URLS[0], verify=False)
+            self.soup = bs(self.r.text, "html.parser")
         if self.r.status_code == 200:
-            for data in self.week:
+            week = self.soup.find_all('h4')
+            for data in week:
                 if (data.find('b') is not None) and ("неделя" in str(data.text)):
                     return data.text
+
+        else:
+            self.check_status()
+
+    def get_opened_doors_day(self):
+        if self.r.url != MGSU_URLS[1]:
+            self.r = requests.get(MGSU_URLS[1], verify=False)
+            self.soup = bs(self.r.text, "html.parser")
+        if self.r.status_code == 200:
+            date = self.soup.find("div", {"id": "content"}).find("div", {"id": "inner-content"}).findAll("span")
+            result_data = []
+            for data in date:
+                if "для поступающих" in str(data.text):
+                    result_data.append(data.text.replace("\xa0", ""))
+            return result_data
 
         else:
             self.check_status()
@@ -34,7 +54,7 @@ class MGSUParser:
 
 class ArticlesParser(MGSUParser):
     def __init__(self):
-        super().__init__(url = URLS.pop(randint(1, len(URLS) - 1)))
+        super().__init__(url=ARTICLE_URLS.pop(randint(1, len(ARTICLE_URLS) - 1)))
         self.articles = self.soup.findAll("div", class_="card")
 
     def get_random_article(self):

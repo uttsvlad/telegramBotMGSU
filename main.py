@@ -6,7 +6,7 @@ TOKEN = "5118191064:AAGkLtD7YJkPMXV2uZaCp4M0txgEOO5KFQ8"
 
 bot = telebot.TeleBot(TOKEN)
 
-BOT_COMMANDS = ["Расписание на сегодня", "Расписание на завтра", "Какая сейчас неделя?", "Какая сейчас пара по счету?",
+BOT_COMMANDS = ["Ближайший день открытых дверей", "", "Какая учебная неделя идет?", "",
                 "Статья об архитектуре"]
 BOT_BUTTONS = []
 for command in BOT_COMMANDS:
@@ -18,7 +18,6 @@ articles_parser = urlworker.ParserFactory.create_articles_parser()
 
 @bot.message_handler(commands=['start', 'help'])
 def process_start_command(msg: types.Message):
-    
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     for button in BOT_BUTTONS:
         markup.add(button)
@@ -28,13 +27,16 @@ def process_start_command(msg: types.Message):
 @bot.message_handler(content_types=["text"])
 def message_reply(message):
     if message.text == BOT_COMMANDS[0]:
-        bot.send_message(message.chat.id, "1")
+        result_list = mgsu_parser.get_opened_doors_day()
+        text = ""
+        for data in result_list:
+            text += data + "\n\n"
+        bot.send_message(message.chat.id, text)
 
     elif message.text == BOT_COMMANDS[1]:
         bot.send_message(message.chat.id, "2")
 
     elif message.text == BOT_COMMANDS[2]:
-
         text = mgsu_parser.set_week()
         bot.send_message(message.chat.id, text)
 
@@ -42,7 +44,6 @@ def message_reply(message):
         bot.send_message(message.chat.id, "4")
 
     elif message.text == BOT_COMMANDS[4]:
-
         text = articles_parser.get_random_article()
         bot.send_message(message.chat.id, text)
 
