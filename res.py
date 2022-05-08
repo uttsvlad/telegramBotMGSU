@@ -1,13 +1,14 @@
 TOKEN = "5118191064:AAGkLtD7YJkPMXV2uZaCp4M0txgEOO5KFQ8"
 
-BOT_COMMANDS = ["Ближайший день открытых дверей", "Направления обучения", "Какая учебная неделя идет?", "",
+BOT_COMMANDS = ["Ближайший день открытых дверей", "Направления обучения", "Общежития", "Какая учебная неделя идет?",
                 "Статья об архитектуре"]
 
 MGSU_URLS = ["https://mgsu.ru/student/Raspisanie_zanyatii_i_ekzamenov/fayly-raspisaniya-dlya-skachivaniya/",
              "https://mgsu.ru/postupay/dod.php",
              "https://mgsu.ru/postupayushchim/Bakalavriat-spetsialitet/Napravleniya-podgotovki-spetsialnosti/",
              "https://mgsu.ru/postupayushchim/Magistratura/Perechen-realizuemykh-programm/",
-             "https://mgsu.ru/postupayushchim/Aspirantura/Napravleniya-podgotovki/index.php"]
+             "https://mgsu.ru/postupayushchim/Aspirantura/Napravleniya-podgotovki/index.php",
+             "https://mgsu.ru/postupayushchim/Bakalavriat-spetsialitet/Obshchezhitiya/"]
 
 ARTICLE_URLS = ["https://www.architect4u.ru/articles.html",
                 "https://www.architect4u.ru/articles-2.html",

@@ -78,11 +78,13 @@ def message_reply(message):
         bot.send_message(message.chat.id, res.CHOOSE_LEVEL, reply_markup=get_levels_markup())
 
     elif message.text == res.BOT_COMMANDS[2]:
-        text = mgsu_parser.get_week()
-        bot.send_message(message.chat.id, text)
+        result = mgsu_parser.get_students_houses_with_img()
+        bot.send_photo(message.chat.id, result[1])
+        bot.send_message(message.chat.id, result[0])
 
     elif message.text == res.BOT_COMMANDS[3]:
-        bot.send_message(message.chat.id, "4")
+        text = mgsu_parser.get_week()
+        bot.send_message(message.chat.id, text)
 
     elif message.text == res.BOT_COMMANDS[4]:
         article_url = articles_parser.get_random_article()

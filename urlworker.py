@@ -174,6 +174,19 @@ class MGSUParser:
             else:
                 self.check_status()
 
+    def get_students_houses_with_img(self):
+        if self.r.url != res.MGSU_URLS[5]:
+            self.r = requests.get(res.MGSU_URLS[5], verify=False)
+            self.soup = Bs(self.r.text, "html.parser")
+        if self.r.status_code == 200:
+            students_houses_info = []  # 0 - text, 1 - img
+            founded = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"})
+            students_houses_info.append(founded.text.replace("\n", ""))
+            students_houses_info.append(founded.find("img")["src"])
+            return students_houses_info
+        else:
+            self.check_status()
+
 
 class ArticlesParser(MGSUParser):
     def __init__(self):
