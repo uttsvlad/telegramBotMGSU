@@ -4,14 +4,13 @@
  </p>
 
 
-We don't now if it's all good with async work))
-Telegram bot parsing MGSU schedule for architect-students
+Бот-помощник поступающим в НИУ МГСУ
 
 <p align="center">
    <b> 🔋 Abilities of our bot </b>
+        <p align="center">Функционал бота заключается в помощи абитуриенту НИУ МГСУ, отправке самой важной информации для поступающего🏯</p>
    <ul>  
    <li> Send /start or /help commnds to see brief information and buttons </li>
    <li> Press any button to see information you need </li>
-   Press any
    </ul>
  </p>

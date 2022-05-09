@@ -1,7 +1,5 @@
 import re
-
 import res
-
 import requests
 from bs4 import BeautifulSoup as Bs
 from random import randint
@@ -86,9 +84,9 @@ class MGSUParser:
 
             for direction in result_directions:
                 direction_url = direction.a["href"]
-                if not direction_url.startswith("http://mgsu.ru/") and not direction_url.startswith(
-                        "https://mgsu.ru/"):
-                    direction_url = "https://mgsu.ru/" + direction.a["href"]
+                if not direction_url.startswith(res.HTTP_MGSU) and not direction_url.startswith(
+                        res.HTTPS_MGSU):
+                    direction_url = res.HTTPS_MGSU + direction.a["href"]
                 self.directions_result_dict[direction.text.strip()] = direction_url
             return self.directions_result_dict
         else:
@@ -170,6 +168,7 @@ class MGSUParser:
 
                 for name in info_names:
                     direction_info += name + ": " + info_values.pop() + "\n\n"
+                direction_info += res.MORE + ":\n" + self.directions_result_dict[direction_name]
                 return direction_info
             else:
                 self.check_status()
@@ -181,9 +180,70 @@ class MGSUParser:
         if self.r.status_code == 200:
             students_houses_info = []  # 0 - text, 1 - img
             founded = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"})
-            students_houses_info.append(founded.text.replace("\n", ""))
             students_houses_info.append(founded.find("img")["src"])
+            students_houses_info.append(founded.text.replace("\n", ""))
             return students_houses_info
+        else:
+            self.check_status()
+
+    def get_olympics(self):
+        if self.r.url != res.MGSU_URLS[6]:
+            self.r = requests.get(res.MGSU_URLS[6], verify=False)
+            self.soup = Bs(self.r.text, "html.parser")
+        if self.r.status_code == 200:
+            result = {}
+            info = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"}).find("ul").findAll("li")
+            for i in info:
+                result[i.text] = i.a["href"]
+            result[res.MORE] = res.OLYMPICS_MORE
+            return result
+        else:
+            self.check_status()
+
+    def get_architect_course(self):
+        if self.r.url != res.MGSU_URLS[7]:
+            self.r = requests.get(res.MGSU_URLS[7], verify=False)
+            self.soup = Bs(self.r.text, "html.parser")
+        if self.r.status_code == 200:
+            urls = {}
+            image = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"}).find("img")
+            if not image["src"].startswith(res.HTTP_MGSU) and not image["src"].startswith(
+                    res.HTTPS_MGSU):
+                urls["image"] = (res.HTTPS_MGSU + image["src"])
+            info = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"}).findAll("a")
+            for i in info:
+                url = i["href"]
+                if not url.startswith(res.HTTP_MGSU) and not url.startswith(
+                        res.HTTPS_MGSU) and "youtube" not in url:
+                    urls[i.text.replace("\n", "").strip()] = (res.HTTPS_MGSU + url)
+                else:
+                    urls[i.text.replace("\n", "").strip()] = url
+            urls[res.MORE] = self.r.url
+            text = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"}).find("p")
+            urls["text"] = text.text.replace("\n", "").strip()
+            urls.pop("")
+            return urls
+        else:
+            self.check_status()
+
+    def get_ege_courses(self):
+        if self.r.url != res.MGSU_URLS[8]:
+            self.r = requests.get(res.MGSU_URLS[8], verify=False)
+            self.soup = Bs(self.r.text, "html.parser")
+        if self.r.status_code == 200:
+            result = {}
+            info = self.soup.find("div", {"class": "col-lg-8 col-md-8 col-sm-8 col-xs-12"}).findAll("td")
+            result["text"] = info[2].text
+            for i in range(3, 10):
+                url = info[i].a["href"]
+                if not url.startswith(res.HTTP_MGSU) and not url.startswith(
+                        res.HTTPS_MGSU):
+                    result[info[i].text.replace("\n", "").strip()] = (res.HTTPS_MGSU + url)
+                else:
+                    result[info[i].text.replace("\n", "").strip()] = info[i].a["href"]
+
+            result[res.MORE] = res.EGE_COURSES_MORE
+            return result
         else:
             self.check_status()
 
@@ -198,7 +258,7 @@ class ArticlesParser(MGSUParser):
             articles_hrefs = []
             for article in self.articles:
                 articles_hrefs.append(article.a["href"])
-            return "https://www.architect4u.ru/" + articles_hrefs.pop(randint(0, len(articles_hrefs) - 1))
+            return res.ARCH_4_U + articles_hrefs.pop(randint(0, len(articles_hrefs) - 1))
 
         else:
             self.check_status()
