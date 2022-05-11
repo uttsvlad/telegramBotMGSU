@@ -1,6 +1,8 @@
 import telebot
 import urlworker
 from telebot import types
+import jsonworker
+
 
 TOKEN = "5118191064:AAGkLtD7YJkPMXV2uZaCp4M0txgEOO5KFQ8"
 
@@ -18,7 +20,7 @@ articles_parser = urlworker.ParserFactory.create_articles_parser()
 
 @bot.message_handler(commands=['start', 'help'])
 def process_start_command(msg: types.Message):
-    
+    jsonworker.check_registration(msg)
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     for button in BOT_BUTTONS:
         markup.add(button)
