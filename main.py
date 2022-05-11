@@ -2,7 +2,7 @@ import telebot
 import res
 import urlworker
 from telebot import types
-import jsonworker
+
 
 
 bot = telebot.TeleBot(res.TOKEN)
@@ -18,7 +18,6 @@ directions = []
 
 @bot.message_handler(commands=["start"])
 def process_start_command(msg: types.Message):
-    jsonworker.check_registration(msg)
     bot.send_message(msg.from_user.id, f"Здравствуйте, {msg.from_user.first_name}! \n" +
                      "Выберите нужную кнопку:",
                      reply_markup=get_default_markup())
