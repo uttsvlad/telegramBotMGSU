@@ -1,9 +1,7 @@
 import telebot
-import res
-import urlworker
+from res import res
+from workers import urlworker
 from telebot import types
-
-
 
 bot = telebot.TeleBot(res.TOKEN)
 
