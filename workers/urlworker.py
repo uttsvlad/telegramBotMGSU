@@ -1,11 +1,11 @@
 import re
-from res import res
+
 import requests
 from bs4 import BeautifulSoup as Bs
 from random import randint
-from workers import fileworker
 import os
-
+from workers import fileworker
+from res import res
 
 class MGSUParser:
     def __init__(self, url=res.MGSU_URLS[0]):
